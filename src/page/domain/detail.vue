@@ -77,7 +77,7 @@ export default {};
 </script>
 
 <style lang="less">
-@import "../../../style/css/base.less";
-@import "../../../style/css/global.less";
-@import "../../../style/less/mobile/domain/detail.less";
+@import "../../style/css/base.less";
+@import "../../style/css/global.less";
+@import "../../style/less/domain/detail.less";
 </style>
