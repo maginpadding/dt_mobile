@@ -1,0 +1,543 @@
+body {
+  max-width: 750px;
+  min-width: 320px;
+  margin: 0 auto;
+}
+
+a {
+  text-decoration: none;
+}
+
+/* tab切换 */
+.container .mt-result {
+  /* padding: 0 0.2rem; */
+  background: #fff;
+}
+
+.container .switch-tab-1,
+.container .switch-tab-3 {
+  padding: 0 0.2rem;
+}
+
+.mt-result .mint-navbar {
+  padding: 0 0.2rem;
+}
+
+.mint-tab-item {
+  border-bottom: 1px solid #e6e6e6;
+}
+
+.mint-tab-item-label {
+  font-size: 0.32rem;
+}
+
+/* tab切换 */
+.container .mt-total {
+  height: 1.4rem;
+  padding: 0.4rem;
+  overflow: hidden;
+  font-size: 0;
+}
+
+.mt-l {
+  float: left;
+  line-height: 0.6rem;
+  font-size: 0.24rem;
+  color: #333333;
+  width: 50%;
+}
+
+.mt-l b {
+  font-size: 0.32rem;
+  color: #333333;
+}
+
+.mt-r {
+  width: 50%;
+  float: right;
+  line-height: 0.6rem;
+  vertical-align: middle;
+  text-align: right;
+  padding-right: 10px;
+}
+
+.mt-r .mt-rb {
+  height: 0.6rem;
+  line-height: 0.6rem;
+  padding: 0 0.32rem;
+  color: #e2383a;
+  font-size: 0.28rem;
+  border: solid 1px #e2383a;
+  height: 100%;
+  line-height: 0.6rem;
+  display: inline-block;
+  border-radius: 3px;
+}
+
+.mint-navbar .mint-tab-item.is-selected {
+  border-bottom: 4px solid #e2383a;
+  color: #e2383a;
+  margin-bottom: -1px;
+}
+
+.mint-cell:first-child .mint-cell-wrapper {
+  background: none;
+}
+
+.mt-table {
+  width: 100%;
+  border-top: 1px solid #e6e6e6;
+  border-left: 1px solid #e6e6e6;
+  border-bottom: 1px solid #e6e6e6;
+  background: #fff;
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+.mt-table th {
+  background: #f3f9fd;
+  font-weight: bold;
+  color: #666666;
+  font-size: 0.28rem;
+  line-height: 0.8rem;
+  height: 0.8rem;
+  border-bottom: 1px solid #e6e6e6;
+}
+
+.mt-table tr {
+  color: #666666;
+  line-height: 0.8rem;
+  height: 0.8rem;
+  background: #fff;
+  border-right: 1px solid #e6e6e6;
+}
+
+.mt-table td,
+.mt-table th {
+  padding-left: 0.4rem;
+  text-align: left;
+  vertical-align: middle;
+}
+
+.mt-table tr td {
+  font-size: 0;
+}
+
+.mt-table tr p,
+.mt-table tr a {
+  font-size: 0.24rem;
+  line-height: 0.36rem;
+}
+
+.mt-table tr span {
+  font-size: 0.24rem;
+  line-height: 0.24rem;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.mt-table td .a-button {
+  display: inline-block;
+  vertical-align: middle;
+  padding: 0 0.2rem;
+  background: #fff;
+  border: solid 1px #e6e6e6;
+  border-radius: 5px;
+  overflow: hidden;
+  line-height: 0.48rem;
+  height: 0.48rem;
+  color: #666666;
+  font-size: 0.24rem;
+}
+
+.container {
+  background: #f5f5f5;
+}
+
+.d-banner {
+  background: url("../../../images/mobile/domain/banner.png") no-repeat center center;
+  background-size: contain;
+  height: 3.6rem;
+}
+
+/*搜索框*/
+
+.deal-search {
+  width: auto;
+  height: auto;
+  padding: 0.4rem;
+  padding-bottom: 0;
+  margin-bottom: 0.2rem;
+  background: #fff;
+}
+
+.search-inp {
+  position: relative;
+  height: 0.7rem;
+  width: 6.7rem;
+  margin: 0 auto;
+  background: #fff;
+}
+
+.search-inp .inp-text {
+  border: solid 1px #e2383a;
+  border-bottom-left-radius: 5px;
+  border-top-left-radius: 5px;
+}
+
+.inp-text {
+  font-size: 0.24rem;
+  color: #999;
+  text-indent: 0.1rem;
+  width: 96%;
+  border-right: none;
+  padding-right: 1.62rem;
+  position: absolute;
+}
+
+button,
+input {
+  border: none;
+  outline: 0;
+}
+
+body .search-btn {
+  color: #ffffff;
+  background: #e23839;
+  width: 2rem;
+  height: 0.7rem;
+  position: absolute;
+  top: 0;
+  right: 0.08rem;
+  font-size: 0.32rem;
+  border-left: none;
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
+
+.search-btn,
+.inp-text {
+  line-height: 0.52rem;
+  vertical-align: middle;
+  height: 100%;
+}
+
+.inp-text {
+  border-bottom-left-radius: 5px;
+  border-top-left-radius: 5px;
+}
+
+.search-btn::before {
+  content: "";
+  display: inline-block;
+  width: 0.3rem;
+  height: 0.32rem;
+  background: url(http://user.epower.cn/template/Home/Default/Mobile/Static/img/btn-icon_03.png) no-repeat;
+  background-size: contain;
+  position: relative;
+  top: 0.06rem;
+}
+
+/* 选择条件 */
+
+.mint-popup {
+  width: 100vw;
+}
+
+#header_top {
+  top: 0;
+}
+
+.choice-condition {
+  display: flex;
+  height: 0.9rem;
+  font-size: 0;
+}
+
+.mt-example {
+  display: inline-block;
+  flex: 2;
+  text-align: left;
+}
+
+.mt-example span {
+  flex: 1;
+  margin: 0 2px;
+  color: #fe8431;
+  font-size: 0.28rem;
+  display: inline-block;
+  line-height: 0.9rem;
+}
+
+.mt-example span.mt-et {
+  color: #666666;
+}
+
+.mt-filter {
+  width: 1.5rem;
+  display: inline-block;
+  flex: 1;
+  line-height: 0.9rem;
+  text-align: right;
+}
+
+.mint-cell:last-child {
+  background: none;
+}
+
+.mt-span {
+  font-size: 0.28rem;
+  color: #666666;
+}
+
+.mt-filter span {
+  position: relative;
+  display: inline-block;
+}
+
+.mt-filter span::after {
+  content: "";
+  width: 0.4rem;
+  height: 0.3rem;
+  display: inline-block;
+  vertical-align: middle;
+  background: url("http://user.epower.cn/template/Home/Default/Mobile/Static/img/tm-sort-filter1.png") no-repeat center center;
+  background-size: contain;
+}
+
+.mt-filter span.active {
+  color: #e2383a;
+}
+
+.mt-filter span.active::after {
+  background: url("http://user.epower.cn/template/Home/Default/Mobile/Static/img/tm-sort-filter2.png") no-repeat center center;
+  background-size: contain;
+}
+
+/* 筛选 */
+.self-mask {
+  width: 10rem;
+  height: 100rem;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background: rgba(0, 0, 0, 0.6);
+  overflow: hidden;
+  z-index: 3000;
+  width: 100%;
+}
+
+.select-condition {
+  width: 80vw;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  right: 0;
+  background: #fff;
+  z-index: 3001;
+  max-width: 700px;
+}
+
+.select-total-condition {
+  height: 88vh;
+  overflow-x: hidden;
+  overflow-y: scroll;
+}
+
+.product-cate {
+  padding-bottom: 0.1rem;
+  border-bottom: 1px solid #e6e3e3;
+}
+
+* {
+  padding: 0;
+  margin: 0;
+}
+
+ul,
+li {
+  list-style: none;
+}
+
+.product-list {
+  display: flex;
+  flex-wrap: wrap;
+  overflow: hidden;
+  padding: 0 0.1rem;
+}
+
+.product-list-li {
+  width: 1.7rem;
+  height: 0.52rem;
+  float: left;
+  margin: 0.1rem;
+  font-size: 0.24rem;
+  color: #666;
+  background: #f5f5f5;
+  text-align: center;
+  line-height: 0.52rem;
+  flex: 1;
+  min-width: 1.7rem;
+  border-radius: 2px;
+}
+
+.product-list-li.active {
+  color: #fff;
+  background: #e2383a;
+  position: relative;
+}
+
+.product-list-li.active::after {
+  content: "";
+  width: 10px;
+  height: 10px;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+}
+
+.product-price-self {
+  display: flex;
+  overflow: hidden;
+  padding: 0 0.1rem;
+  padding-bottom: 0.2rem;
+}
+
+.product-price-self .product-input {
+  height: 0.5rem;
+  line-height: 0.5rem;
+  border: solid 1px #999;
+  border-radius: 25px;
+  flex: 2;
+  width: 2rem;
+  text-align: center;
+  font-size: 0.24rem;
+  color: #999;
+}
+
+.product-price-self .product-line {
+  flex: 1;
+  margin: 0 0.2rem;
+  line-height: 0.5rem;
+  font-size: 0.24rem;
+  text-align: center;
+  color: #999;
+}
+
+.mt-button-wrap {
+  box-shadow: 0 17px 6px -19px #ff8c1a inset;
+}
+
+.mt-button {
+  text-align: center;
+  padding-top: 4vh;
+  width: 3.6rem;
+  margin-left: auto;
+  margin-right: auto;
+  overflow: hidden;
+  height: 12vh;
+}
+
+.mt-button .reset-button,
+.mt-button .submit-button {
+  width: 1.8rem;
+  height: 0.7rem;
+  color: #fff;
+  text-align: center;
+  float: left;
+}
+
+.mt-button .reset-button label,
+.mt-button .submit-button label {
+  font-size: 0.28rem;
+  line-height: 0.64rem;
+}
+
+.mt-button .reset-button {
+  background: #fe8431;
+  border-radius: 0;
+  border-top-left-radius: 25px;
+  border-bottom-left-radius: 25px;
+}
+
+.mt-button .submit-button {
+  background: #e2383a;
+  border-radius: 0;
+  border-top-right-radius: 25px;
+  border-bottom-right-radius: 25px;
+}
+
+// 推荐域名
+
+.mt-list {
+  background: #f5f5f5;
+  overflow: hidden;
+
+  li {
+    width: 3.4rem;
+    padding: .2rem;
+    margin: .2rem;
+    float: left;
+    background: #fff;
+    font-size: 0;
+    margin-right: 0;
+
+    &:nth-child(2n) {
+      margin-right: 0;
+    }
+
+    .domain-name {
+      font-weight: bold;
+      font-size: .32rem;
+      color: #5c92fa;
+      line-height: .48rem;
+      margin-bottom: 5px;
+      display: inline-block;
+      text-align: left;
+    }
+
+    .card-info {
+      height: .7rem;
+      text-align: left;
+      font-size: .24rem;
+      color: #666;
+    }
+
+    .card-price {
+      line-height: .4rem;
+
+      .c-price {
+        font-size: 0.28rem;
+        float: left;
+        color: #e2383a;
+      }
+
+      .c-time {
+        font-size: 0.24rem;
+        color: #333;
+        float: right;
+      }
+    }
+  }
+
+}
+
+// 打包域名
+.domain-wrap {
+  width: 60%;
+  display: inline-block;
+  vertical-align: middle;
+
+  .domain-name {
+    display: block;
+    text-align: left;
+  }
+}
+
+.domain-icon {
+  background: #fe8431;
+  width: 32px;
+  height: 32px;
+  display: inline-block;
+  vertical-align: middle;
+}

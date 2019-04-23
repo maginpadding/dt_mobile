@@ -1,0 +1,423 @@
+@image: '../../../images/pc/domain/';
+
+// 使用这种变量引入图片路径 需要加引号
+.detail-domain {
+  padding: 40px;
+  background: #fff;
+  overflow: hidden;
+
+  .detail-left {
+    float: left;
+    width: (800/1120)*100%;
+
+    .dlt {
+      border: solid 1px #e6e6e6;
+      height: 370px;
+
+      .dlt-top {
+        border-bottom: 1px solid #e6e6e6;
+        background: #f3f9fd;
+        height: 56px;
+        line-height: 56px;
+
+        .dlt-name {
+          text-align: left;
+          padding-left: 40px;
+          font-size: 24px;
+          font-weight: bold;
+
+          a {
+            color: #666;
+          }
+        }
+
+        .dlt-search {
+          text-align: right;
+
+          span {
+            display: inline-block;
+            margin-right: 25px;
+          }
+
+          a {
+
+            font-size: 14px;
+            color: #666;
+
+            &:before {
+              width: 20px;
+              height: 21px;
+              display: inline-block;
+              vertical-align: -6px;
+              margin-right: 4px;
+              content: "";
+            }
+
+            &.whois:before {
+              background: url("@{image}whois.png") no-repeat left center;
+            }
+
+            &.baidu:before {
+              background: url("@{image}baidu.png") no-repeat left center;
+            }
+
+            &.google:before {
+              background: url("@{image}google.png") no-repeat left center;
+            }
+          }
+
+        }
+
+      }
+
+      .dlt-info {
+        padding-top: 30px;
+        overflow: hidden;
+
+        .dlt-list {
+          width: 65%;
+          float: left;
+
+          li {
+            line-height: 36px;
+            margin-bottom: 6px;
+
+            label {
+              display: inline-block;
+              text-align: right;
+              width: 120px;
+              font-size: 16px;
+              color: #666;
+            }
+
+            span {
+              display: inline-block;
+              text-align: left;
+              font-size: 16px;
+              color: #333;
+            }
+
+            .dlt-price {
+              font-weight: bold;
+              color: #e2383a;
+            }
+
+            .dlt-time {
+              color: #e2383a;
+            }
+          }
+        }
+
+        .dlt-ir {
+          width: 30%;
+          float: left;
+          margin-top: 15px;
+
+          .dlt-ir-gg {
+            width: 100%;
+            height: 230px;
+            border: 1px solid #e6e6e6;
+            background: #f7f7f7;
+            float: left;
+            line-height: 28px;
+            color: #666;
+            font-size: 14px;
+            padding: 5px 10px;
+          }
+        }
+
+        &.dlt-batch {
+          padding-left: 30px;
+          overflow: hidden;
+          //   height: 230px;
+
+          .dlt-tl {
+            float: left;
+            width: 36%;
+            border: 1px solid #e6e6e6;
+            height: 223px;
+            overflow: hidden;
+          }
+
+          .dlt-tl table {
+            width: 100%;
+
+            th {
+              line-height: 42px;
+              background: #f7f7f7;
+              color: #666666;
+              font-size: 14px;
+              text-align: center;
+              width: 33%;
+            }
+
+            th:first-child {
+              width: 20%;
+            }
+
+            th {
+              width: 40%;
+            }
+
+            tbody tr {
+              line-height: 48px;
+              text-align: center;
+              &.dlt-toggle {
+                line-height: 32px;
+                text-align: center;
+                cursor: pointer;
+                td {
+                  color: #5c92fa;
+                  font-size: 14px;
+                }
+              }
+              td {
+                color: #666666;
+                font-size: 14px;
+                border-bottom: 1px dashed #e6e6e6;
+              }
+            }
+          }
+
+          
+
+          .dlt-list {
+            width: 64%;
+            float: right;
+          }
+        }
+      }
+    }
+
+    .dl-btn {
+      margin-top: 30px;
+      text-align: center;
+      margin-bottom: 50px;
+      .el-button--small{
+        padding: 9px 20px;
+        &:first-child{
+            background: #e2383a;
+            border-color:#e2383a
+        }
+        &:nth-child(2){
+            background: #fe8431;
+            border-color:#fe8431
+        }
+        span{
+            color: #fff;
+            font-size: 16px;
+        }
+      }
+    }
+
+    // 购买流程
+    .dlc {
+      border: solid 1px #e6e6e6;
+      padding: 20px 40px;
+      height: 260px;
+
+      .dlc-title {
+        font-size: 16px;
+        line-height: 36px;
+        height: 36px;
+        border-bottom: 1px dotted #e6e6e6;
+        margin-bottom: 30px;
+
+        span {
+          padding-left: 10px;
+          color: #333;
+          border-left: 2px solid #e2383a;
+          display: inline-block;
+          line-height: 20px;
+        }
+      }
+
+      .dlc-process {
+        height: 130px;
+        background: url('@{image}process.png') no-repeat center center;
+      }
+    }
+
+    // 温馨提示
+    .dlb {
+      margin-top: 40px;
+      padding-left: 40px;
+      padding-bottom: 60px;
+
+      .dlb-title {
+        line-height: 32px;
+        margin-bottom: 10px;
+
+        span {
+          display: inline-block;
+          line-height: normal;
+          border-left: 2px solid #e2383a;
+          color: #333;
+          font-size: 16px;
+          padding-left: 10px;
+        }
+      }
+
+      .dlb-list {
+        li {
+          color: #666;
+          font-size: 14px;
+          line-height: 32px;
+          text-align: left;
+        }
+      }
+    }
+  }
+
+  // 浏览记录和推荐
+  .detail-right {
+    float: right;
+    width: (300/1120)*100%;
+    border: solid 1px #e6e6e6;
+
+    .dr-title {
+      background: #f7f7f7;
+      height: 56px;
+      line-height: 56px;
+      padding-left: 24px;
+
+      .drt-l {
+        line-height: 56px;
+        vertical-align: middle;
+        color: #fe8431;
+        font-size: 14px;
+      }
+
+      .drt-l:before {
+        width: 24px;
+        height: 22px;
+        display: inline-block;
+        line-height: 56px;
+        vertical-align: middle;
+        color: #fe8431;
+        font-size: 14px;
+        font-weight: bold;
+        content: "";
+        background: url('@{image}drh.png') no-repeat center center;
+      }
+
+      .drt-r {
+        font-size: 14px;
+        color: #5c92fa;
+        text-align: right;
+        padding-right: 10px;
+      }
+    }
+
+    .dr-list {
+      background: #fff;
+      padding: 0 20px;
+
+
+
+      .dr-li {
+        padding: 15px 0;
+        border-bottom: 1px dashed #e6e6e6;
+        overflow: hidden;
+
+        &:last-child {
+          border-bottom: none;
+        }
+
+        .dr-l {
+          float: left;
+          width: (200/260)*100%;
+
+          a {
+            display: block;
+            line-height: 24px;
+            margin-bottom: 5px;
+            color: #5c92fa;
+            font-size: 16px;
+          }
+
+          span {
+            display: block;
+            font-size: 12px;
+            color: #666666;
+            margin-top: 10px;
+          }
+        }
+
+        .dr-r {
+          float: right;
+          width: (60/260)*100%;
+          text-align: center;
+          color: #e2383a;
+          font-size: 14px;
+          line-height: 24px;
+        }
+      }
+    }
+
+    .dr-history {
+      border-bottom: 1px solid #e6e6e6;
+    }
+
+    .dr-like {
+      padding: 0 20px;
+
+      .dr-list {
+        padding: 0;
+      }
+
+      .dr-title {
+        padding: 0;
+        background: transparent !important;
+
+        .drt-l:before {
+          background: url('@{image}drl.png') no-repeat center center;
+        }
+
+        .drt-r {
+          cursor: pointer;
+        }
+      }
+    }
+  }
+
+  
+}
+
+
+// 打包域名
+.package-table {
+    .package-table-close {
+      width: 24px;
+      height: 24px;
+      display: block;
+      font-size: 24px;
+      position: absolute;
+      right: 12px;
+      z-index: 2;
+      top: 16px;
+      color: #999;
+      cursor: pointer;
+    }
+    .el-table {
+      th {
+        background: #f7f7f7;
+      }
+      th,
+      td {
+        text-align: center;
+      }
+      .el-table__body {
+        tr {
+          border-bottom: 1px dashed #e6e6e6;
+        }
+      }
+    }
+  }
+  .package-table .el-dialog__header {
+    display: none;
+  }
+  .package-table .el-dialog__body {
+    border: solid 6px #a3b7d8;
+    padding: 0;
+  }
