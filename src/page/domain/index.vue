@@ -11,20 +11,20 @@
           type="text"
           name="keywords"
           class="inp-text"
-          placeholder="请输入商标"
-          v-model="render.keyword"
+          placeholder="请输入关键词"
+          v-model="operate.keyword"
         >
-        <button type="button" class="search-btn" @click="filterSearch('click')">查询商标</button>
+        <button type="button" class="search-btn" @click="dealWith">搜索域名</button>
       </div>
       <!-- 选择条件 -->
       <div class="choice-condition bg-fff">
         <!-- 搜索示例 -->
         <div class="mt-example">
           <span class="mt-et">搜索：</span>
-          <span>数字</span>
-          <span>单拼</span>
-          <span>双拼</span>
-          <span>中文</span>
+          <span @click.native="changeActive('assort',1)">数字</span>
+          <span @click.native="changeActive('assort',16)">单拼</span>
+          <span @click.native="changeActive('assort',17)">双拼</span>
+          <span @click.native="changeActive('assort',19)">中文</span>
         </div>
         <!-- mint-ui checklist 和 layer(PC版) 冲突 所以还是使用原生的单选框-->
         <div class="mt-filter">
@@ -37,111 +37,156 @@
     <!-- 选择条件 -->
     <div class="select-condition" v-if="selectModal">
       <div class="select-total-condition">
-        <!-- 产品分类 -->
-        <div class="product-cate">
-          <mt-cell title="产品分类" is-link @click.native="productShowFunc"></mt-cell>
-          <!-- 产品列表 -->
+        <!-- 域名 -->
+        <div class="product-cate el-domain-box">
+          <mt-cell title="域名" is-link></mt-cell>
           <ul class="product-list">
-            <li
-              class="product-list-li"
-              v-for="(item, index) in condition.classType"
-              :key="index"
-              v-show="index<6||status.classShow"
-              @click="selectClick('classType',item.id)"
-            >{{item.id}}-{{item.value}}</li>
+            <el-col :span="8" class="el-col-input">
+              <el-input v-model="operate.keyword" placeholder="请输入内容" class="cate-input"></el-input>
+            </el-col>
+            <el-col :span="12" class="domain-list el-col-checkbox">
+              <el-checkbox-group v-model="operate.checkRule">
+                <el-checkbox label="开头" value="true"></el-checkbox>
+                <el-checkbox label="结尾" value="true"></el-checkbox>
+                <el-checkbox label="简介" value="true"></el-checkbox>
+              </el-checkbox-group>
+            </el-col>
           </ul>
         </div>
-        <!-- 商标类型 -->
+        <!-- 排除 -->
+        <div class="product-cate el-domain-box">
+          <mt-cell title="排除" is-link></mt-cell>
+          <ul class="product-list">
+            <el-col :span="8" class="el-col-input">
+              <el-input v-model="operate.exclude" placeholder="请输入内容" class="cate-input"></el-input>
+            </el-col>
+            <el-col :span="12" class="domain-list el-col-checkbox">
+              <el-checkbox-group v-model="operate.filterRule">
+                <el-checkbox label="开头" value="true"></el-checkbox>
+                <el-checkbox label="结尾" value="true"></el-checkbox>
+                <el-checkbox label="简介" value="true"></el-checkbox>
+              </el-checkbox-group>
+            </el-col>
+          </ul>
+        </div>
+        <!-- 域名后缀 -->
         <div class="product-cate">
-          <mt-cell title="商标类型"></mt-cell>
-          <!-- 类型列表 -->
+          <mt-cell title="后缀" is-link @click.native="productShowFunc('suffix')"></mt-cell>
           <ul class="product-list">
             <li
               class="product-list-li"
-              v-for="(item, index) in condition.tradeType"
+              v-for="(item, index) in defaultData.suffix"
               :key="index"
-              @click="selectClick('tradeType',item.id)"
-              :class="render['tradeType']==item.id?'active':''"
+              :class="operate.suffix==item.id?'active':''"
+              @click="changeActive('suffix',item.id)"
+              v-show="index<6||status.suffix"
             >{{item.value}}</li>
           </ul>
         </div>
-        <!-- 商标价格 -->
+        <!-- 分类 手机端暂时不选择那么详细 -->
         <div class="product-cate">
-          <mt-cell title="商标价格"></mt-cell>
-          <!-- 商标价格 -->
+          <mt-cell title="分类" is-link @click.native="productShowFunc('assort')"></mt-cell>
+          <ul class="product-list">
+            <li
+              class="product-list-li"
+              v-for="(item, index) in defaultData.assort"
+              :key="index"
+              :class="operate.assort==item.id?'active':''"
+              v-show="index<6||status.assort"
+              @click.native="changeActive('assort',item.id)"
+            >{{item.value}}</li>
+          </ul>
+        </div>
+        <!-- 价格类型 -->
+        <div class="product-cate">
+          <mt-cell title="类型"></mt-cell>
+          <ul class="product-list">
+            <li class="product-list-li" v-for="item in defaultData.saleType">{{item.value}}</li>
+          </ul>
+        </div>
+        <!-- 来源 -->
+        <div class="product-cate">
+          <mt-cell title="来源"></mt-cell>
+          <ul class="product-list">
+            <li
+              class="product-list-li"
+              v-for="(item, index) in defaultData.source"
+              :key="index"
+            >{{item.value}}</li>
+          </ul>
+        </div>
+        <!-- 价格 -->
+        <div class="product-cate">
+          <mt-cell title="价格"></mt-cell>
           <div class="product-price-self">
-            <input class="product-input" v-model="render.priceStart" placeholder="最低价（元）">
+            <input class="product-input" v-model="operate.minPrice" placeholder="最低价（元）">
             <div class="product-line">——</div>
-            <input class="product-input" v-model="render.priceEnd" placeholder="最高价（元）">
+            <input class="product-input" v-model="operate.maxPrice" placeholder="最高价（元）">
           </div>
+        </div>
+        <!-- 长度 -->
+        <div class="product-cate">
+          <mt-cell title="长度"></mt-cell>
+          <div class="product-price-self">
+            <input class="product-input" v-model="operate.minLength" placeholder="最短（个）">
+            <div class="product-line">——</div>
+            <input class="product-input" v-model="operate.maxLength" placeholder="最长（个）">
+          </div>
+        </div>
+        <!-- 结束时间 -->
+        <div class="product-cate">
+          <mt-cell title="结束时间"></mt-cell>
           <ul class="product-list">
             <li
               class="product-list-li"
-              v-for="(item, index) in condition.price"
+              v-for="(item, index) in defaultData.endTime"
               :key="index"
-              :class="render['price']==item.id?'active':''"
-              @click="selectClick('price',item.id)"
             >{{item.value}}</li>
           </ul>
         </div>
-        <!-- 注册年限 -->
+        <!-- 过期时间 -->
         <div class="product-cate">
-          <mt-cell title="注册年限"></mt-cell>
-          <!-- 注册年限 -->
+          <mt-cell title="过期时间"></mt-cell>
           <ul class="product-list">
             <li
               class="product-list-li"
-              v-for="(item, index) in condition.year"
+              v-for="(item, index) in defaultData.expireTime"
               :key="index"
-              :class="render['year']==item.id?'active':''"
-              @click="selectClick('year',item.id)"
-            >{{item.value}}</li>
-          </ul>
-        </div>
-        <!-- 交易类型 -->
-        <div class="product-cate">
-          <mt-cell title="交易类型"></mt-cell>
-          <!-- 交易类型 -->
-          <ul class="product-list">
-            <li
-              class="product-list-li"
-              v-for="(item, index) in condition.buyType"
-              :key="index"
-              :class="render['buyType']==item.id?'active':''"
-              @click="selectClick('buyType',item.id)"
             >{{item.value}}</li>
           </ul>
         </div>
       </div>
       <div class="mt-button-wrap">
         <div class="mt-button">
-          <mt-button type="default" class="reset-button" @click="resetForm">重置</mt-button>
-          <mt-button type="primary" class="submit-button" @click="locationHref">确认</mt-button>
+          <mt-button type="default" class="reset-button" @click.native="resetForm">重置</mt-button>
+          <mt-button type="primary" class="submit-button" @click.native="dealWith">确认</mt-button>
         </div>
       </div>
     </div>
     <!-- 搜索结果 -->
     <div class="mt-result">
-      <mt-navbar v-model="selected">
-        <mt-tab-item id="1">所有域名</mt-tab-item>
-        <mt-tab-item id="2">推荐域名</mt-tab-item>
-        <mt-tab-item id="3">打包域名</mt-tab-item>
-        <mt-tab-item id="4">平价好名</mt-tab-item>
+      <mt-navbar v-model="activeTab">
+        <mt-tab-item
+          v-for="(item, index) in defaultData.switchs"
+          :key="index"
+          @click.native="switchClick(item.id)"
+          :id="item.id"
+        >{{item.value}}</mt-tab-item>
       </mt-navbar>
       <!-- 域名总量 -->
       <div class="mt-total">
         <div class="mt-l">
           当前共有
-          <b>974668</b>个域名
+          <b>{{page.totalNum}}</b>个域名
         </div>
         <div class="mt-r">
-          <a href class="mt-rb">发布域名</a>
+          <a href="javascript:;" class="mt-rb" @click.native="go">发布域名</a>
         </div>
       </div>
-      <div class="tab-con">
+      <div class="tab-con" v-loading="result.vLoading">
         <!-- tab-container -->
-        <mt-tab-container v-model="selected">
-          <mt-tab-container-item id="1" class="switch-tab-1">
+        <mt-tab-container v-model="activeTab">
+          <mt-tab-container-item id="2" class="switch-tab-1">
             <table class="mt-table">
               <thead>
                 <tr>
@@ -150,23 +195,33 @@
                   <th>操作</th>
                 </tr>
               </thead>
-              <tr>
+              <tr v-for="(item, index) in result.resData" :key="index">
                 <td>
                   <p>
-                    <a href>eggtoken.cn</a>
+                    <a
+                      href="javascript:;"
+                      rel="noopener noreferrer"
+                      class="domain-name"
+                      v-if="activeTab!=14"
+                      @click="goTo(item.id,'detail')"
+                    >{{ item.name }}</a>
                   </p>
-                  <p>大火的区块链糖果盒...</p>
+                  <p>{{item.introduction.length>30?(item.introduction.substr(0,22)+'...'):item.introduction}}</p>
                 </td>
                 <td>
-                  <span class="mt-price">¥8,988</span>
+                  <span class="mt-price">¥{{item.init_price}}</span>
                 </td>
                 <td>
-                  <a href="http://" target="_blank" rel="noopener noreferrer" class="a-button">购买</a>
+                  <a
+                    rel="noopener noreferrer"
+                    class="a-button"
+                    @click="goTo(item.id,'order')"
+                  >购买</a>
                 </td>
               </tr>
             </table>
           </mt-tab-container-item>
-          <mt-tab-container-item id="2">
+          <mt-tab-container-item id="11">
             <!-- 推荐域名 -->
             <table class="mt-table">
               <thead>
@@ -178,35 +233,25 @@
               </thead>
             </table>
             <ul class="mt-list">
-              <li>
+              <li v-for="(item, index) in result.resData" :key="index">
                 <a
-                  href="http://100tou.com"
+                  href="javascript:;"
                   target="_blank"
                   rel="noopener noreferrer"
                   class="domain-name"
-                >100tou.com</a>
-                <div class="card-info cf">百投网，百度一下</div>
+                  @click.native="goTo(item.id,'detail')"
+                >{{item.name}}</a>
+                <div
+                  class="card-info cf"
+                >{{item.introduction.length>30?(item.introduction.substr(0,22)+'...'):item.introduction}}</div>
                 <div class="card-price cf">
-                  <span class="c-price">¥8,888</span>
-                  <span class="c-time">11时37份</span>
-                </div>
-              </li>
-              <li>
-                <a
-                  href="http://100tou.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="domain-name"
-                >100tou.com</a>
-                <div class="card-info cf">百投网，百度一下</div>
-                <div class="card-price cf">
-                  <span class="c-price">¥8,888</span>
-                  <span class="c-time">11时37份</span>
+                  <span class="c-price">¥{{ item.init_price }}</span>
+                  <span class="c-time">{{item.remaining_time}}</span>
                 </div>
               </li>
             </ul>
           </mt-tab-container-item>
-          <mt-tab-container-item id="3" class="switch-tab-3">
+          <mt-tab-container-item id="14" class="switch-tab-3">
             <!-- 打包域名 -->
             <table class="mt-table">
               <thead>
@@ -216,82 +261,84 @@
                   <th>操作</th>
                 </tr>
               </thead>
-              <tr>
+              <tr v-for="(item, index) in result.resData" :key="index">
                 <td>
                   <div class="domain-wrap">
                     <a
-                      href="http://"
+                      href="javascript:;"
                       target="_blank"
                       rel="noopener noreferrer"
                       class="domain-name"
-                    >bale.com</a>
-                    <a
-                      href="http://"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      class="domain-name"
-                    >bale.com</a>
-                    <a
-                      href="http://"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      class="domain-name"
-                    >bale.com</a>
-                    <a
-                      href="http://"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      class="domain-name"
-                    >bale.com</a>
+                      v-for="(item, index) in item.name.split(',')"
+                      @click.native="goTo(item.id,'detail')"
+                      :key="index"
+                      v-show="index>3?false:true"
+                    >{{item}}</a>
                   </div>
-                  <div class="domain-icon"></div>
+                  <div
+                    class="domain-icon el-icon-goods"
+                    v-if="activeTab==14"
+                    @click.native="showMoreDomain(item.name.split(','),item.remaining_time)"
+                  ></div>
                 </td>
                 <td>
-                  <span class="mt-price">¥8,988</span>
+                  <span class="mt-price">¥{{item.init_price}}</span>
                 </td>
                 <td>
-                  <a href="http://" target="_blank" rel="noopener noreferrer" class="a-button">购买</a>
+                  <a
+                    href="javascript:;"
+                    rel="noopener noreferrer"
+                    class="a-button"
+                    @click.native="goTo(item.id,'order')"
+                  >购买</a>
                 </td>
               </tr>
             </table>
           </mt-tab-container-item>
-          <mt-tab-container-item id="4">
+          <mt-tab-container-item id="3">
             <!-- 平价好名 -->
-            <!-- 推荐域名 -->
             <table class="mt-table">
               <thead>
                 <tr>
-                  <th>默认排序</th>
-                  <th>价格排序</th>
-                  <th>剩余时间排序</th>
+                  <th>
+                    <span @click.native="domainSort()">默认排序</span>
+                  </th>
+                  <th>
+                    <span @click.native="domainSort('priceSort')">
+                      按价格排序
+                      <i
+                        :class="filter.priceSort==1?'el-icon-caret-bottom':'el-icon-caret-top'"
+                        v-if="filter.priceSort!=0"
+                      ></i>
+                    </span>
+                  </th>
+                  <th>
+                    <span @click.native="domainSort('saleEndTimeSort')">
+                      按剩余时间排序
+                      <i
+                        :class="filter.saleEndTimeSort==1?'el-icon-caret-bottom':'el-icon-caret-top'"
+                        v-if="filter.saleEndTimeSort!=0"
+                      ></i>
+                    </span>
+                  </th>
                 </tr>
               </thead>
             </table>
             <ul class="mt-list">
-              <li>
+              <li v-for="(item, index) in result.resData" :key="index">
                 <a
-                  href="http://100tou.com"
+                  href="javascript:;"
                   target="_blank"
                   rel="noopener noreferrer"
                   class="domain-name"
-                >100tou.com</a>
-                <div class="card-info cf">百投网，百度一下</div>
+                  @click.native="goTo(item.id,'detail')"
+                >{{item.name}}</a>
+                <div
+                  class="card-info cf"
+                >{{item.introduction.length>30?(item.introduction.substr(0,22)+'...'):item.introduction}}</div>
                 <div class="card-price cf">
-                  <span class="c-price">¥8,888</span>
-                  <span class="c-time">11时37份</span>
-                </div>
-              </li>
-              <li>
-                <a
-                  href="http://100tou.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="domain-name"
-                >100tou.com</a>
-                <div class="card-info cf">百投网，百度一下</div>
-                <div class="card-price cf">
-                  <span class="c-price">¥8,888</span>
-                  <span class="c-time">11时37份</span>
+                  <span class="c-price">¥{{ item.init_price }}</span>
+                  <span class="c-time">{{item.remaining_time}}</span>
                 </div>
               </li>
             </ul>
@@ -299,393 +346,312 @@
         </mt-tab-container>
       </div>
     </div>
+    <!-- 打包域名弹框 -->
+    <div class="package-table" v-show="package.dialog">
+      <el-dialog :visible.sync="package.dialog" width="420px">
+        <div
+          class="package-table-close el-icon-circle-close-outline"
+          @click.native="package.dialog=false"
+        ></div>
+        <el-table :data="package.data" height="300px">
+          <el-table-column property="index" label="序号" width="110"></el-table-column>
+          <el-table-column property="name" label="域名" width="150"></el-table-column>
+          <el-table-column property="expire_day" label="过期时间" width="160"></el-table-column>
+        </el-table>
+      </el-dialog>
+    </div>
   </div>
 </template>
 
 <script>
+import rules from "../../style/js/domain/rules.js";
+import API from "../../API/api";
 export default {
   data() {
     return {
-      selected: "1",
-      // 弹层里的筛选条件
-      condition: {
-        classType: [
-          { id: "01", value: "化学原料" },
-          { id: "02", value: "颜料油漆" },
-          { id: "03", value: "日化用品" },
-          { id: "04", value: "燃料油脂" },
-          { id: "05", value: "医药卫生" },
-          { id: "06", value: "五金金属" },
-          { id: "07", value: "机械设备" },
-          { id: "08", value: "手工器械" },
-          { id: "09", value: "科学仪器" },
-          { id: "10", value: "医疗器械" },
-          { id: "11", value: "家用电器" },
-          { id: "12", value: "运输工具" },
-          { id: "13", value: "军用烟花" },
-          { id: "14", value: "珠宝钟表" },
-          { id: "15", value: "乐器" },
-          { id: "16", value: "文化用品" },
-          { id: "17", value: "橡胶制品" },
-          { id: "18", value: "皮革皮具" },
-          { id: "19", value: "建筑材料" },
-          { id: "20", value: "家具" },
-          { id: "21", value: "家用器具" },
-          { id: "22", value: "绳网袋篷" },
-          { id: "23", value: "纺织纱线" },
-          { id: "24", value: "床单布料" },
-          { id: "25", value: "服装鞋帽" },
-          { id: "26", value: "花边拉链" },
-          { id: "27", value: "地毯席垫" },
-          { id: "28", value: "体育玩具" },
-          { id: "29", value: "食品罐头" },
-          { id: "30", value: "调味茶糖" },
-          { id: "31", value: "水果花木" },
-          { id: "32", value: "啤酒饮料" },
-          { id: "33", value: "酒" },
-          { id: "34", value: "烟草烟具" },
-          { id: "35", value: "广告贸易" },
-          { id: "36", value: "金融物管" },
-          { id: "37", value: "建筑修理" },
-          { id: "38", value: "通讯电信" },
-          { id: "39", value: "运输旅行" },
-          { id: "40", value: "材料处理" },
-          { id: "41", value: "教育娱乐" },
-          { id: "42", value: "科研服务" },
-          { id: "43", value: "餐饮酒店" },
-          { id: "44", value: "医疗园艺" },
-          { id: "45", value: "社会法律" }
-        ],
-        tradeType: [
-          // { id: 0, value: "不限" },
-          { id: 8, value: "纯图片" },
-          { id: 4, value: "纯数字" },
-          { id: 1, value: "纯中文" },
-          { id: 2, value: "纯字母" },
-          { id: 3, value: "中文+字母" },
-          { id: 5, value: "字母+数字" },
-          { id: 6, value: "中文+数字" },
-          { id: 7, value: "中文+字母+数字" }
-        ],
-        price: [
-          { id: 1, value: "1万以下" },
-          { id: 2, value: "1-5万" },
-          { id: 3, value: "5-10万" },
-          { id: 4, value: "10万以上" }
-        ],
-        year: [
-          // { id: 0, value: "不限" },
-          { id: 1, value: "满一年" },
-          { id: 2, value: "满两年" },
-          { id: 3, value: "满三年" }
-        ],
-        buyType: [
-          // { id: -1, value: "不限" },
-          { id: 0, value: "一口价" },
-          { id: 1, value: "议价" }
+      // 搜索结果
+      package: {
+        dialog: false,
+        data: [
+          {
+            index: 1,
+            name: "22.cn",
+            expire_day: "2019-4-19"
+          }
         ]
       },
-      // 弹层里的 状态信息
-      status: {
-        classShow: false,
-        typeShow: false,
-        priceShow: false
+      //推荐域名 平价域名 参数
+      filter: {
+        priceSort: 0,
+        saleEndTimeSort: 0
       },
-      // 弹层是否显示
+      // tab切换
+      activeTab: "2",
+
+      //高级搜索弹框
       selectModal: false,
-      extensionState: false,
-      temporary: false,
-      render: {
-        classType: [],
-        tradeType: 0,
-        price: "",
-        priceStart: "",
-        priceEnd: "",
-        year: 0,
-        buyType: -1, //交易类型
-        extension: 0, //是否续展
-        keyword: "", //关键词
-        numberBytes: 0, //商标名字节数
-        orderby: "", //排序类型
-        orderbyType: "" //排序规则 低到高 高到底
+      //默认显示部分
+      status: {
+        suffix: false,
+        assort: false
       },
-      // 页面数据 排序列表
-      sortType: [
-        {
-          flex: 1,
-          className: "slot",
-          values: [
-            {
-              name: "综合排序",
-              orderby: "",
-              orderbyType: ""
-            },
-            {
-              name: "时间升序",
-              orderby: "time",
-              orderbyType: "asc"
-            },
-            {
-              name: "时间降序",
-              orderby: "time",
-              orderbyType: "desc"
-            },
-            {
-              name: "价格升序",
-              orderby: "price",
-              orderbyType: "asc"
-            },
-            {
-              name: "价格降序",
-              orderby: "price",
-              orderbyType: "desc"
-            }
-          ]
-        }
-      ],
-      mtSelect: {
-        currentTags: "",
-        popupVisible: false
-      }
+      // excludeTwoShow: false,//另外的排除
+      // 默认数据
+      defaultData: {
+        saleType: rules.saleType,
+        endTime: rules.endTime,
+        source: rules.source,
+        expireTime: rules.expireTime,
+        suffix: rules.suffix,
+        assort: rules.assort,
+        switchs: rules.switchs
+      },
+      operate: {
+        keyword: "", //域名
+        exclude: "",
+        exclude2: "",
+        checkRule: [],
+        filterRule: [],
+        filterRule2: [],
+        saleType: "0",
+        endTime: "-1",
+        expireTime: "-1",
+        source: "0",
+        minPrice: 0,
+        maxPrice: "",
+        minLength: 0,
+        maxLength: "",
+        suffix: "0",
+        assort: "0"
+      },
+      //搜索结果数据
+      result: {
+        resData: [],
+        vLoading: true
+      },
+      page: {
+        currentPage: 0,
+        pageSize: 0,
+        totalNum: 0
+      },
+      //提交数据 存储一下方便分页变化时更新数据
+      submitData: {}
     };
   },
-  watch: {
-    selectModal: function(newValue, oldValue) {
-      try {
-        if (newValue) {
-          $("#header_top").css("z-index", "10");
-        } else {
-          $("#header_top").css("z-index", "1000");
-        }
-      } catch (error) {}
-    }
+  created: function() {
+    //初次加载默认域名数据
+    this.ajaxSubmit();
   },
   methods: {
-    // 是否续展
-    extensionFunc: function(param) {
-      this.render.extension == 1
-        ? (this.render.extension = 0)
-        : (this.render.extension = 1);
-      this.render.extension == 1
-        ? (this.extensionState = true)
-        : (this.extensionState = false);
-      this.locationHref();
+    changeActive: function(type, item) {
+      this.operate[type] = item;
+      this.dealWith();
     },
-    // 显示所有商标分类
-    productShowFunc: function(type) {
-      this.status.classShow = !this.status.classShow;
-    },
-    // 选中标记
-    selectClick: function(type, id) {
-      var data = this.condition[type];
-      var found = "";
-      for (var i = 0; i < data.length; i++) {
-        if (data[i].id == id) {
-          found = data[i];
-          break;
-        }
-      }
-      // var found = this.condition[type].map(function (obj) {
-      //     return obj.id == id;
-      // });
-      if (type == "price") {
-        this.render.price = id;
-        if (id == 0) {
-          this.render.priceStart = 0;
-          this.render.priceEnd = 0;
-        }
-        if (id == 1) {
-          this.render.priceStart = 1;
-          this.render.priceEnd = 10000;
-        }
-        if (id == 2) {
-          this.render.priceStart = 10000;
-          this.render.priceEnd = 50000;
-        }
-        if (id == 3) {
-          this.render.priceStart = 50000;
-          this.render.priceEnd = 100000;
-        }
-        if (id == 4) {
-          this.render.priceStart = 100000;
-          this.render.priceEnd = 0;
-        }
-        return;
-      }
-      if (type == "selfPrice") {
-        if (
-          !this.isNumber(this.render.priceStart) ||
-          !this.isNumber(this.render.priceEnd)
-        ) {
-          this.render.priceStart = 0;
-          this.render.priceEnd = 0;
-        }
-        return;
-      }
-      if (type == "classType") {
-        this.render[type].push(found.id);
-      } else {
-        this.render[type] = found.id;
-      }
-    },
-    // 重置表单
-    resetForm: function() {
-      this.render = {
-        classType: [],
-        tradeType: 0,
-        price: "",
-        priceStart: 0,
-        priceEnd: 0,
-        year: 0,
-        buyType: -1, //交易类型
-        extension: 0, //是否续展
-        keyword: "", //关键词
-        numberBytes: 0, //商标名字节数
-        orderby: "", //排序类型
-        orderbyType: "" //排序规则 低到高 高到底
-      };
-      this.status = {
-        classShow: false,
-        typeShow: false,
-        priceShow: false
-      };
-    },
-    /*获取网址参数*/
-    getURL: function(name) {
-      var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
-      var r = decodeURI(window.location.search)
-        .substr(1)
-        .match(reg);
-      if (r != null) return r[2];
-      return null;
-    },
-    /*获取全部url参数,并转换成json对象*/
-    getUrlAllParams: function(url) {
-      var url = url ? url : window.location.href;
-      var _pa = url.substring(url.indexOf("?") + 1),
-        _arrS = _pa.split("&"),
-        _rs = {};
-      for (var i = 0, _len = _arrS.length; i < _len; i++) {
-        var pos = _arrS[i].indexOf("=");
-        if (pos == -1) {
-          continue;
-        }
-        var name = _arrS[i].substring(0, pos),
-          value = window.decodeURIComponent(_arrS[i].substring(pos + 1));
-        _rs[name] = value;
-      }
-      return _rs;
-    },
-    onSelectChange: function(picker, values) {
-      if (this.mtSelect.currentTags.name != values[0].name) {
-        // 判断是否有参数 如果有,第一次按照url里的参数来
-        if (!this.temporary) {
-          this.mtSelect.currentTags = values[0];
-        }
-        this.temporary = false;
-        this.render.orderby = this.mtSelect.currentTags.orderby;
-        this.render.orderbyType = this.mtSelect.currentTags.orderbyType;
-        // this.locationHref();
-        // this.popupVisible = false;
-      }
-    },
-    // 提交商标求购需求
-    submitRequest: function(formName) {
+    dealWith: function() {
+      console.log("dealWith :", "dealWith");
       var _this = this;
+      var checkRule = _this.operate.checkRule;
+      var filterRule = _this.operate.filterRule;
+      var filterRule2 = _this.operate.filterRule2;
+
+      var keywordWithStart = checkRule.indexOf("开头") != -1 ? 1 : "";
+      var keywordWithEnd = checkRule.indexOf("结尾") != -1 ? 1 : "";
+      var keywordWithInfo = checkRule.indexOf("简介") != -1 ? 1 : "";
+
+      var excludeWithStart = filterRule.indexOf("开头") != -1 ? 1 : "";
+      var excludeWithEnd = filterRule.indexOf("结尾") != -1 ? 1 : "";
+
+      var excludeWithStart2 = filterRule2.indexOf("开头") != -1 ? 1 : "";
+      var excludeWithEnd2 = filterRule2.indexOf("结尾") != -1 ? 1 : "";
+
       var data = {
-        type: "3",
-        cls: _this.form.type,
-        UserName: _this.form.name,
-        tel: _this.form.mobile,
-        Content: _this.form.description
+        keyword: _this.operate.keyword, //域名
+        keywordWithStart: keywordWithStart, //域名
+        keywordWithEnd: keywordWithEnd, //结尾
+        keywordWithInfo: keywordWithInfo, //简介
+
+        exclude: _this.operate.exclude, //排除
+        excludeWithStart: excludeWithStart, //简介
+        excludeWithEnd: excludeWithEnd, //简介
+
+        exclude1: _this.operate.exclude2, //排除
+        exclude1WithStart: excludeWithStart2, //简介
+        exclude1WithEnd: excludeWithEnd2, //简介
+
+        domainSuffix: _this.operate.suffix, //域名后缀
+        source: _this.operate.source, //域名来源
+        saleType: _this.operate.saleType, //价格类型 一口价/议价
+        // detailsType: _this.operate.detailsType,//所有域名
+        ddlClass: _this.operate.assort,
+        structureType: _this.operate.structureType,
+
+        minPrice: _this.operate.minPrice,
+        maxPrice: _this.operate.maxPrice,
+        minLength: _this.operate.minLength,
+        maxLength: _this.operate.maxLength,
+        endTime: _this.operate.endTime, //结束时间/剩余时间
+        expireTime: _this.operate.expireTime //到期时间
       };
-      // EP.loading();
+      // 调用父组件的方法 获取结果
+      this.ajaxSubmit(data);
+    },
+    //重置表单
+    resetForm: function() {
+      this.operate = {
+        keyword: "", //域名
+        exclude: "",
+        exclude2: "",
+        checkRule: [],
+        filterRule: [],
+        filterRule2: [],
+        saleType: "0",
+        endTime: "-1",
+        expireTime: "-1",
+        source: "0",
+        minPrice: 0,
+        maxPrice: "",
+        minLength: 0,
+        maxLength: "",
+        suffix: "0",
+        assort: "0"
+      };
+    },
+    productShowFunc: function(params) {
+      this.status[params] = !this.status[params];
+    },
+    // 搜索相关
+    //跳转发布页
+    go: function(params) {
+      this.$router.push({ path: "/domain/publish/" });
+    },
+    /**
+     * 切换类型 所有域名 推荐域名  打包域名  平价好名
+     */
+    switchClick: function(id) {
+      this.activeTab = id;
+      console.log("id :", id);
+      //所有域名 detailsType 不传值
+      var obj = {
+        detailsType: id
+      };
+      //detailsType 等于2的时候不传值
+      if (id == 2) {
+        obj = {
+          detailsType: ""
+        };
+      }
+      //切换的时候重置表单
+      this.result.resData = [];
+      this.resetForm();
+      this.ajaxSubmit(obj);
+    },
+    //渲染数据 结束loading
+    changeResult: function(res) {
+      if (res.result) {
+        this.result.resData = res.data.list;
+        this.page.currentPage = res.data.curPage;
+        this.page.totalNum = parseInt(res.data.total);
+        this.result.vLoading = false;
+        this.selectModal = false;
+      } else {
+        this.$alert(res.text, "系统提示", {
+          confirmButtonText: "确定"
+        });
+      }
+    },
+    // 搜索域名
+    // data 传入数据
+    ajaxSubmit: function(data) {
+      var _this = this;
+      this.result.vLoading = true;
+      if (data) {
+        $.extend(_this.submitData, data);
+      }
       $.ajax({
-        type: "POST",
-        url: "/build/demand_save",
-        data: data,
-        dataType: "JSON",
+        type: "get",
+        url: API.DT_LIST,
+        data: _this.submitData,
+        dataType: "json",
         success: function(res) {
-          // EP.close()
-          if (res.result) {
-            _this.requestStatus = true;
-            // EP.success(res.text, {
-            //   yes: function () {
-            //     location.reload()
-            //   }
-            // })
-          } else {
-            EP.error(res.text);
-          }
+          _this.changeResult(res);
         }
       });
     },
-    // 搜索关键字
-    filterSearch: function(type, e) {
-      if (type == "click") {
-        location.href =
-          "/trademark/jiaoyilists/?keyword=" + this.render.keyword;
-      }
-      if (type == "keyup") {
-        if (e.keyCode == 13 && e.key == "Enter") {
-          location.href =
-            "/trademark/jiaoyilists/?keyword=" + this.render.keyword;
-        }
-      }
+    //分页变化更新数据
+    sizeChange: function(value) {
+      var obj = {
+        pageSize: value
+      };
+      this.ajaxSubmit(obj);
     },
-    // 验证 输入的价格
-    isNumber: function(val) {
-      var regPos = /^\d+(\.\d+)?$/; //非负浮点数
-      var regNeg = /^(-(([0-9]+\.[0-9]*[1-9][0-9]*)|([0-9]*[1-9][0-9]*\.[0-9]+)|([0-9]*[1-9][0-9]*)))$/; //负浮点数
-      if (regPos.test(val) || regNeg.test(val)) {
-        return true;
-      } else {
+    currentChange: function(value) {
+      var obj = {
+        pageIndex: value
+      };
+      this.ajaxSubmit(obj);
+    },
+    /**
+     * 表格的升序降序 价格 剩余时间
+     * ascending  升序
+     * descending 降序
+     */
+    sortChange: function(param) {
+      var data = {};
+      if (!param.prop) {
+        data.priceSort = 0;
+        this.ajaxSubmit(data);
         return false;
       }
-    },
-    locationHref: function() {
-      // 需要提交的数据
-      if (this.render.orderby && this.render.orderbyType) {
-        window.location.href =
-          "/trademark/jiaoyilists/?p1=" +
-          this.render.priceStart +
-          "&p2=" +
-          this.render.priceEnd +
-          "&type=" +
-          this.render.tradeType +
-          "&buytype=" +
-          this.render.buyType +
-          "&years=" +
-          this.render.year +
-          "&classes=" +
-          this.render.classType.join(",") +
-          "&keyword=" +
-          encodeURIComponent(this.render.keyword) +
-          "&extension=" +
-          this.render.extension +
-          "&orderby=" +
-          this.render.orderby +
-          "&orderbytype=" +
-          this.render.orderbyType;
-      } else {
-        window.location.href =
-          "/trademark/jiaoyilists/?p1=" +
-          this.render.priceStart +
-          "&p2=" +
-          this.render.priceEnd +
-          "&type=" +
-          this.render.tradeType +
-          "&buytype=" +
-          this.render.buyType +
-          "&years=" +
-          this.render.year +
-          "&classes=" +
-          this.render.classType.join(",") +
-          "&keyword=" +
-          encodeURIComponent(this.render.keyword) +
-          "&extension=" +
-          this.render.extension;
+      if (param.prop == "init_price") {
+        data.priceSort = param.order == "ascending" ? 2 : 1;
       }
+      if (param.prop == "remaining_time") {
+        data.saleEndTimeSort = param.order == "ascending" ? 2 : 1;
+      }
+      this.ajaxSubmit(data);
+    },
+    //显示打包域名弹框  由于只有域名传入,转化一下数据
+    showMoreDomain: function(arr, expire_day) {
+      var brr = [];
+      for (var index = 0; index < arr.length; index++) {
+        var data = arr[index];
+        var obj = {};
+        obj.name = data;
+        obj.index = index;
+        obj.expire_day = expire_day;
+        brr.push(obj);
+      }
+      this.package.data = brr;
+      this.package.dialog = true;
+    },
+    //跳转页面 订单或者详情页
+    //id   域名交易ID
+    //type 页面类型
+    goTo: function(id, type) {
+      this.$router.push({
+        path: `/domain/${type}/${id}`
+      });
+    },
+    //搜索列表排序
+    domainSort: function(type) {
+      var data = {};
+      if (!type) {
+        this.filter.saleEndTimeSort = 0;
+        this.filter.priceSort = 0;
+        data = this.filter;
+      }
+      if (type == "priceSort") {
+        this.filter.saleEndTimeSort = 0;
+      }
+      if (type == "saleEndTimeSort") {
+        this.filter.priceSort = 0;
+      }
+      if (type) {
+        this.filter[type] = this.filter[type] == 1 ? 2 : 1;
+        data[type] = this.filter[type];
+      }
+      console.log("data :", data);
+      this.ajaxSubmit(data);
     }
   }
 };
@@ -695,4 +661,69 @@ export default {
 @import "../../style/css/base.less";
 @import "../../style/css/global.less";
 @import "../../style/less/domain/index.less";
+
+// 打包域名
+.package-table {
+  .package-table-close {
+    width: 24px;
+    height: 24px;
+    display: block;
+    font-size: 24px;
+    position: absolute;
+    right: 12px;
+    z-index: 2;
+    top: 16px;
+    color: #999;
+    cursor: pointer;
+  }
+  .el-table {
+    th {
+      background: #f7f7f7;
+    }
+    th,
+    td {
+      text-align: center;
+    }
+    .el-table__body {
+      tr {
+        border-bottom: 1px dashed #e6e6e6;
+      }
+    }
+  }
+}
+.package-table .el-dialog__header {
+  display: none;
+}
+.package-table .el-dialog__body {
+  border: solid 6px #a3b7d8;
+  padding: 0;
+}
+.mt-result {
+  .tab-con {
+    tr {
+      padding: 0 5px;
+    }
+    td {
+      padding-top: 5px;
+      padding-bottom: 5px;
+      border-bottom: 1px dashed #e6e6e6;
+    }
+  }
+  .domain-icon {
+    color: #fe8431;
+    width: 32px;
+    height: 32px;
+    vertical-align: middle;
+    display: inline-block;
+    font-size: 32px;
+    cursor: pointer;
+  }
+}
+.mt-example {
+  span {
+    display: inline-block;
+    margin-right: 10px;
+    cursor: pointer;
+  }
+}
 </style>

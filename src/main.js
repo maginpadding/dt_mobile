@@ -3,9 +3,13 @@ import App from './App.vue';
 // element-ui
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
+Vue.use(ElementUI);
+
 //mint-ui
 import Mint from 'mint-ui';
 import 'mint-ui/lib/style.css';
+Vue.use(Mint);
+
 //router.js
 import router from './router/index';
 //mock.js模拟数据
@@ -16,11 +20,9 @@ import router from './router/index';
 // Vue.prototype.$http = axios
 
 
-Vue.use(Mint);
 
 Vue.config.productionTip = false;
 
-Vue.use(ElementUI);
 // Vue.use(Axios);
 
 // Vue.use(VueAxios , Axios);

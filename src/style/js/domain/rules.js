@@ -982,7 +982,99 @@ const assort = [{
     "value": "中文"
   }
 ]
+const expireTime = [{
+    id: "-1",
+    value: "全部"
+  },
+  {
+    id: "30",
+    value: ">30天"
+  },
+  {
+    id: "60",
+    value: ">60天"
+  },
+  {
+    id: "90",
+    value: ">90天"
+  },
+  {
+    id: "180",
+    value: ">180天"
+  },
+  {
+    id: "300",
+    value: ">300天"
+  }
+]
+const source = [{
+    id: "0",
+    value: "全部"
+  },
+  {
+    id: "1",
+    value: "自有域名"
+  },
+  {
+    id: "2",
+    value: "爱名网"
+  },
+  {
+    id: "3",
+    value: "其他注册商"
+  }
+]
+const endTime = [{
+    id: "-1",
+    value: "全部"
+  },
+  {
+    id: "0",
+    value: "今天"
+  },
+  {
+    id: "1",
+    value: "明天"
+  },
+  {
+    id: "2",
+    value: "后天"
+  }
+]
+const saleType= [
+  {
+    id: "0",
+    value: "所有类型"
+  },
+  {
+    id: "2",
+    value: "一口价"
+  }
+]
+const switchs=[
+  {
+    id: "2",
+    value: "所有域名"
+  },
+  {
+    id: "11",
+    value: "推荐域名"
+  },
+  {
+    id: "14",
+    value: "打包域名"
+  },
+  {
+    id: "3",
+    value: "平价好名"
+  }
+]
 module.exports = {
   suffix: suffix,
-  assort: assort
+  assort: assort,
+  expireTime: expireTime,
+  source: source,
+  endTime: endTime,
+  saleType:saleType,
+  switchs:switchs
 }
