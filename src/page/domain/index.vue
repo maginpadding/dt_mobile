@@ -212,11 +212,7 @@
                   <span class="mt-price">¥{{item.init_price}}</span>
                 </td>
                 <td>
-                  <a
-                    rel="noopener noreferrer"
-                    class="a-button"
-                    @click="goTo(item.id,'order')"
-                  >购买</a>
+                  <a rel="noopener noreferrer" class="a-button" @click="goTo(item.id,'order')">购买</a>
                 </td>
               </tr>
             </table>
@@ -604,9 +600,11 @@ export default {
       }
       if (param.prop == "init_price") {
         data.priceSort = param.order == "ascending" ? 2 : 1;
+        data.saleEndTimeSort = 0;
       }
       if (param.prop == "remaining_time") {
         data.saleEndTimeSort = param.order == "ascending" ? 2 : 1;
+        data.priceSort = 0;
       }
       this.ajaxSubmit(data);
     },
